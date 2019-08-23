@@ -3,6 +3,7 @@ function Book(title, author, num_pages, id) {
   this.author = author;
   this.num_pages = num_pages;
   this.id = `b${id}`;
+  this.status = false;
 }
 
 book1 = new Book("Lord of the Rings", "JR T", 999, 1);
@@ -19,11 +20,19 @@ function addBookToLibrary(book) {
 function render(arr) {
     let bookList = document.querySelector("#book-list");
     arr.forEach(book => {
-        bookList.innerHTML += `<li>${book.title}</li>`;
-        bookList.innerHTML += `<button id=${book.id}>Delete</button>`
-        document.querySelector(`#${book.id}`).addEventListener('click', event => {
-          //delete something
+        bookList.innerHTML += `<li id=${book.id}>${book.title}</li>`;
+        bookList.innerHTML += `<button id=delete-${book.id}>Delete</button>`
+        document.querySelector(`#delete-${book.id}`).addEventListener('click', event => {
+        //   let delBook = arr.indexOf(book);
+        //   delete arr[delBook];
+          let child = document.getElementById(book.id);
+          bookList.removeChild(child);
         });
+        book.status == false ? bookList.innerHTML +=  `Status: NOT READ` : bookList.innerHTML += "Status: READ"
+        bookList.innerHTML += `<button id=read-${book.id}>Read</button>`
+        document.querySelector(`#read-${book.id}`).addEventListener('click', read => {
+            book.status == false ? book.status = true : book.status = false;
+          });
     });
 }
 
