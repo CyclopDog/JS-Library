@@ -13,26 +13,33 @@ book3 = new Book("Rails Tutorial", "Michael Hartl", 299, 3);
 let myLibrary = [book1, book2, book3];
 
 function addBookToLibrary(book) {
-  // do stuff here
-  myLibrary.push(book); // TODO push book item into array
+  myLibrary.push(book);
 }
 
 function render(arr) {
     let bookList = document.querySelector("#book-list");
+    bookList.innerHTML = "";
     arr.forEach(book => {
-        bookList.innerHTML += `<li id=${book.id}>${book.title}</li>`;
-        bookList.innerHTML += `<button id=delete-${book.id}>Delete</button>`
-        document.querySelector(`#delete-${book.id}`).addEventListener('click', event => {
-        //   let delBook = arr.indexOf(book);
-        //   delete arr[delBook];
-          let child = document.getElementById(book.id);
-          bookList.removeChild(child);
+        let book_content = "";
+        book_content += `<li id=${book.id}>${book.title}`;
+        book_content += `<button id=delete-${book.id}>Delete</button>`
+
+        book_content += "<br><br>"
+        book.status == false ? book_content +=  `Status: NOT READ` : book_content += "<div>Status: READ"
+        book_content += `<button id=read-${book.id}>Toggle Read</button></li>`
+        bookList.innerHTML += book_content;
+    });
+
+    arr.forEach(book => {
+      document.querySelector(`#delete-${book.id}`).addEventListener('click', event => {
+        let location = arr.indexOf(book);
+        delete arr[location];
+        render(arr);
+      });
+      document.querySelector(`#read-${book.id}`).addEventListener('click', read => {
+          book.status == false ? book.status = true : book.status = false;
+          render(arr);
         });
-        book.status == false ? bookList.innerHTML +=  `Status: NOT READ` : bookList.innerHTML += "Status: READ"
-        bookList.innerHTML += `<button id=read-${book.id}>Read</button>`
-        document.querySelector(`#read-${book.id}`).addEventListener('click', read => {
-            book.status == false ? book.status = true : book.status = false;
-          });
     });
 }
 
@@ -40,7 +47,20 @@ document.querySelector("#new").addEventListener('click', event => {
   document.querySelector("#book_form").style.display = "block";
 });
 
+document.getElementById('book_form').addEventListener("submit",function(e) {
+    e.preventDefault(); // before the code
+    let t = document.querySelector('#book_form #title').value;
+    let a = document.querySelector('#book_form #author').value;
+    let p = document.querySelector('#book_form #num_pages').value;
+    let i = myLibrary.length + 1;
+    new_book = new Book(t, a, p, i);
+    addBookToLibrary(new_book);
+    clearForm();
+    render(myLibrary);
+  });
 
-
-
+function clearForm(){
+  let fields = document.querySelectorAll('#book_form .field');
+  fields.forEach(field => field.value = "");
+}
 render(myLibrary);
