@@ -48,7 +48,7 @@ document.querySelector("#new").addEventListener('click', event => {
 });
 
 document.getElementById('book_form').addEventListener("submit",function(e) {
-    e.preventDefault(); // before the code
+    e.preventDefault();
     let t = document.querySelector('#book_form #title').value;
     let a = document.querySelector('#book_form #author').value;
     let p = document.querySelector('#book_form #num_pages').value;
